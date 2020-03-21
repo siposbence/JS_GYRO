@@ -6,7 +6,10 @@
 
 </head>
 <body>
-
+<h1>
+    Fourier transzformált giroszkóp adat
+</h1>
+<a href="raw.html" class="button">Nyers adat</a>
 <pre class="output">
     alpha:
     beta:
@@ -143,7 +146,7 @@
         output.innerHTML  = "alpha : " + z + "\n";
         output.innerHTML  += "beta : " + x + "\n";
         output.innerHTML += "gamma: " + y + "\n";
-        output.innerHTML += "fps: " + fps + "\n";
+        output.innerHTML += "fps: " + 1000/fps + "\n";
 
     });
 
