@@ -233,18 +233,18 @@ function check() {
  
 function requestT () {
       if (typeof(DeviceMotionEvent) !== 'undefined' && typeof(DeviceMotionEvent.requestPermission) === 'function') {
-          
           DeviceMotionEvent.requestPermission()
           .then(response => {
-	alert('Orientation tracking '+ response);
-          
-            if (response == 'granted') {
-              window.addEventListener('devicemotion', (e) => {
-               document.getElementById('request').style.visibility='hidden';
-              })
-            }
+	  alert('Orientation tracking '+ response);
+          document.getElementById('request').style.visibility='hidden';
+
+            //if (response == 'granted') {
+            // window.addEventListener('devicemotion', (e) => {
+            //   document.getElementById('request').style.visibility='hidden';
+            //  })
+            //}
           })
-      .catch(console.error)
+          .catch(console.error)
       }else {
           alert('DeviceMotionEvent is not defined');
       }
