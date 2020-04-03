@@ -25,12 +25,11 @@ if (location.protocol != 'https:') {
 }
 
 function requestT () {
-    if (typeof(DeviceOrientationEvent) !== 'undefined' && typeof(DeviceOrientationEvent.requestPermission) === 'function') {
-        alert('enter');
-        DeviceOrientationEvent.requestPermission()
+    if (typeof(DeviceMotionEvent) !== 'undefined' && typeof(DeviceMotionEvent.requestPermission) === 'function') {
+        DeviceMotionEvent.requestPermission()
         .then(response => {
-        alert('resp'+ response);
-          if (response == 'granted') {
+        alert('resp '+ response);
+          if (response === 'granted') {
             window.addEventListener('devicemotion', (e) => {
             // do something with e
             })
@@ -38,7 +37,7 @@ function requestT () {
         })
     .catch(console.error)
     }else {
-        alert('DeviceOrientationEvent is not defined');
+        alert('DeviceMotionEvent is not defined');
     }
 }
 document.getElementById('request').onclick = requestT;
