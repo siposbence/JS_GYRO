@@ -28,14 +28,14 @@ function requestT () {
     if (typeof(DeviceMotionEvent) !== 'undefined' && typeof(DeviceMotionEvent.requestPermission) === 'function') {
         DeviceMotionEvent.requestPermission()
         .then(response => {
-        alert('resp '+ response);
+        alert('access '+ response);
           if (response === 'granted') {
             window.addEventListener('devicemotion', (e) => {
             // do something with e
-            })
+            });
           }
         })
-    .catch(console.error)
+    .catch(console.error);
     }else {
         alert('DeviceMotionEvent is not defined');
     }
