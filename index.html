@@ -99,15 +99,15 @@
     }).catch(console.error)
     }
     
-    window.addEventListener('devicemotion', function(event) {
+    window.addEventListener('deviceorientation', function(event) {
         var output = document.querySelector('.output');
         //console.log(event.acceleration.x + ' m/s2');
 	//console.log(event.acceleration.y + ' m/s2');
 	//console.log(event.acceleration.z + ' m/s2');
         console.log(event.interval);
-        var x = event.acceleration.x//event.rotationRate.alpha;  // In degree in the range [-180,180]
-        var y = event.acceleration.y//event.rotationRate.beta;
-        var z = event.acceleration.z//event.rotationRate.gamma;
+        var x = 1 //event.acceleration.x //event.rotationRate.alpha;  // In degree in the range [-180,180]
+        var y = 2 //event.acceleration.y //event.rotationRate.beta;
+        var z = 3 //event.acceleration.z //event.rotationRate.gamma;
         var fps = event.interval;
         xs.push(x);
         ys.push(y);
