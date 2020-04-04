@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Fourier</title>
     <style>
     body {
         font-family: Arial;
@@ -34,10 +34,10 @@
 
 <body>
 <h1>
-    Fourier transzformált giroszkóp adat
+    Fourier
 </h1>
 <h2>
-    <a href="raw.html" class="button">Nyers adat</a>
+    <a href="raw.html" class="button">Raw</a>
 </h2>
 <pre class="output">
     alpha:
@@ -96,31 +96,19 @@
     }).catch(console.error)
     }
     
+    //Motion event
     window.addEventListener('devicemotion', function(event) {
         var output = document.querySelector('.output');
 	console.log(rotationX);
 	console.log(rotationY);
 	console.log(rotationZ);
-	//console.log(event.beta + ' deg');
-	//console.log(event.gamma + ' deg');
-	//console.log(event.alpha + ' deg');    
-	
 	console.log(accelerationX);
 	console.log(accelerationY);
 	console.log(accelerationZ);
-	console.log(event.acceleration);
-        //console.log(event.acceleration.x + ' m/s2');
-	//console.log(event.acceleration.y + ' m/s2');
-	//console.log(event.acceleration.z + ' m/s2');
-	    
-	console.log(event.rotationRate.alpha);
-	console.log(event.rotationRate.beta);
-	console.log(event.rotationRate.gamma);
-
         console.log(event.interval);
-        var x = 2//event.rotationRate.alpha;  // In degree in the range [-180,180]
-        var y = 3//event.rotationRate.beta;
-        var z = -1//event.rotationRate.gamma;
+        var x = event.rotationRate.alpha;  // In degree in the range [-180,180]
+        var y = event.rotationRate.beta;   // In degree in the range [-180,180]
+        var z = event.rotationRate.gamma;  // In degree in the range [-180,180]
         var fps = event.interval;
         xs.push(x);
         ys.push(y);
@@ -150,11 +138,11 @@
 
             var result = [], val;
 
-            // pad beginning of result with null values
+            //Pad beginning of result with null values
             for (var i=0; i < count-1; i++)
                 result.push(null);
 
-            // calculate average for each subarray and add to result
+            //Calculate average for each subarray and add to result
             for (var i=0, len=array.length - count; i <= len; i++){
 
                 val = avg(array.slice(i, i + count), qualifier);
@@ -205,7 +193,7 @@
                 //console.log((data[i])*128/Math.max(...data)+128)
                 line(px, py, x, y);
 
-                //store the last position
+                //Last position
                 px = x;
                 py = y;
         }}
