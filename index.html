@@ -98,25 +98,23 @@
     
     window.addEventListener('devicemotion', function(event) {
         var output = document.querySelector('.output');
-	console.log(event.rotationX);
-	console.log(event.rotationY);
-	console.log(event.rotationZ);
 	console.log(rotationX);
 	console.log(rotationY);
 	console.log(rotationZ);
-	console.log(event.beta);
-	console.log(event.gamma);
-	console.log(event.alpha);    
+	console.log(event.beta + ' deg');
+	console.log(event.gamma + ' deg');
+	console.log(event.alpha + ' deg');    
 	
-	console.log(event.accelerationX);
-	console.log(event.accelerationY);
-	console.log(event.accelerationZ);
 	console.log(accelerationX);
 	console.log(accelerationY);
 	console.log(accelerationZ);
         console.log(event.acceleration.x + ' m/s2');
 	console.log(event.acceleration.y + ' m/s2');
 	console.log(event.acceleration.z + ' m/s2');
+	    
+	console.log(event.rotationRate.alpha);
+	console.log(event.rotationRate.beta);
+	console.log(event.rotationRate.gamma);
 
         console.log(event.interval);
         var x = 2//event.rotationRate.alpha;  // In degree in the range [-180,180]
