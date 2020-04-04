@@ -6,9 +6,36 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    
     <meta charset="UTF-8">
-    <title>Pulse and repiratory rate</title>
+    <title>FFT</title>
     <style>
+        
+        body {
+            font-family: Arial;
+            font-size: 20px;
+        }
+
+        h1 { 
+            display: block;
+  	        font-size: 2em;
+  	        margin-top: 1.5em;
+  	        margin-bottom: 1em;
+  	        margin-left: 0;
+  	        margin-right: 0;
+  	        font-weight: bold;
+        }
+    
+        h2 { 
+  	        display: block;
+  	        font-size: 1em;
+  	        margin-top: 0.67em;
+  	        margin-bottom: 0.67em;
+  	        margin-left: 0;
+  	        margin-right: 0;
+  	        font-weight: bold;
+        }
+        
         .slidecontainer {
             width: 100%;
         }
@@ -47,9 +74,12 @@
 </head>
 <body>
 <h1>
-    Fourier transzformált giroszkóp adat
+    FFT
 </h1>
-<a href="raw.html" class="button">Nyers adat</a>
+<h2>
+    <a href="fourier.html" class="button">Fourier</a>
+    <a href="raw.html" class="button">Raw</a>
+</h2>
 <br>
 <select id="ddlViewBy">
     <option value="1">x</option>
@@ -57,7 +87,6 @@
     <option value="3">z</option>
 </select>
 <pre class="output">
-
     alpha:
     beta:
     gamma:
@@ -65,30 +94,26 @@
     beta_max:
     gamma_max:
     fps:
-
 </pre>
 
 
 <script src="https://cdn.jsdelivr.net/npm/p5@1.0.0/lib/p5.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.15.1/dist/tf.min.js"></script>
 <script>
-
-
-
     var xs = [0];
     var ys = [0];
     var zs = [0];
     var ii = 0;
     var size = 1024
 
-
+    //Motion event
     window.addEventListener('devicemotion', function(event) {
         var slider = document.getElementById("ddlViewBy");
         console.log(slider.value);
         var output = document.querySelector('.output');
         var x = event.rotationRate.alpha;  // In degree in the range [-180,180]
-        var y = event.rotationRate.beta;
-        var z = event.rotationRate.gamma;
+        var y = event.rotationRate.beta;   // In degree in the range [-180,180]
+        var z = event.rotationRate.gamma;  // In degree in the range [-180,180]
         var t = event.interval;
         if (slider.value==1 && ii%3==0){xs.push(x);}
         if (slider.value==2 && ii%3==0){ys.push(y);}
@@ -111,10 +136,6 @@
                 tmp = zs.shift();
                 output.innerHTML  += "z max freq: " + 60*pwr_spect(zs)/256*1000/t/3  + "\n";
             }
-
-
-
-
         }
 
         function pwr_spect(data) {
@@ -140,15 +161,15 @@
             tf.dispose(pxx);
             return(temp);
 
-            }
+        }
         ii += 1;
-
     });
 
 </script>
 </body>
+
+
+
 </html>
-
-
 
 
