@@ -11,8 +11,8 @@
     <title>FFT</title>
     <style>
         body {
-        font-family: Arial;
-        font-size: 20px;
+            font-family: Arial;
+            font-size: 20px;
         }
 
         h1 { 
@@ -87,6 +87,8 @@
     <option value="2" selected="selected">y</option>
     <option value="3">z</option>
 </select>
+<br>
+<br>
 <pre class="output">
     alpha:
     beta:
@@ -109,9 +111,10 @@
     var ii = 0;
     const size = 128;
     const skip = 12;
-
+    
     //Motion event + no sleep
     window.addEventListener('devicemotion', function(event) {
+        //No sleep
         var noSleep = new NoSleep();
         var wakeLockEnabled = false;
         var toggleEl = document.querySelector("#toggle");
@@ -129,6 +132,7 @@
             }
         }, false);
         
+        //Motion
         var slider = document.getElementById("ddlViewBy");
         console.log(slider.value);
         var output = document.querySelector('.output');
