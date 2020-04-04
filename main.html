@@ -21,12 +21,22 @@
          margin-right: 0;
   	     font-weight: bold;
     }
+    
+    h2 { 
+  	    display: block;
+  	    font-size: 1em;
+  	    margin-top: 0.67em;
+  	    margin-bottom: 0.67em;
+  	    margin-left: 0;
+  	    margin-right: 0;
+  	    font-weight: bold;
+    }
     </style>
 </head>
 
 <body>
 <h1>
-Main Page
+    Main Page
 </h1>
 <h2>
     <a href="raw.html" class="button">Raw</a>
@@ -35,6 +45,49 @@ Main Page
     <br>
     <a href="fft_psd.html" class="button">FFT</a>
 </h2>
+
+
+
+//<script src="https://cdn.jsdelivr.net/npm/p5@1.0.0/lib/p5.js"></script>
+<script>
+        function setup() {
+        createCanvas(512, 256);
+        noFill();
+	
+	    //Request sensor access on iOS 13 devices
+	    if (typeof(DeviceMotionEvent) !== 'undefined' && typeof(DeviceMotionEvent.requestPermission) === 'function') {
+		        DeviceMotionEvent.requestPermission()
+                .catch(() => {
+                //Show permission dialog only the first time
+        	    let askButton = createButton("Allow acess to sensors")
+        	    askButton.style("font-size", "24px")
+        	    askButton.position(0, 0)
+        	    askButton.mousePressed(onAskButtonClicked)
+        	    throw error
+      	 })
+      	.then(() => {
+	    //This runs on subsequent visits
+        permissionGranted = true
+      	})
+  	    } else {
+    	text("non ios 13 devices", 50, 50)
+    	nonios13device = true
+    	permissionGranted = true
+  	    }
+    }
+
+    //Handle first time visiting to grant access
+    function onAskButtonClicked() {
+    DeviceMotionEvent.requestPermission().then(response => {
+    if (response === 'granted') {
+      permissionGranted = true
+    } else {
+      permissionGranted = false
+    }
+    this.remove()
+    }).catch(console.error)
+    }
+</script>
 </body>
 
 
