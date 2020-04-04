@@ -12,23 +12,23 @@
     }
 
     h1 { 
-  	display: block;
-  	font-size: 2em;
-  	margin-top: 1.5em;
-  	margin-bottom: 1em;
-  	margin-left: 0;
-  	margin-right: 0;
-  	font-weight: bold;
+  	    display: block;
+  	    font-size: 2em;
+  	    margin-top: 1.5em;
+  	    margin-bottom: 1em;
+  	    margin-left: 0;
+  	    margin-right: 0;
+  	    font-weight: bold;
     }
     
     h2 { 
-  	display: block;
-  	font-size: 1em;
-  	margin-top: 0.67em;
-  	margin-bottom: 0.67em;
-  	margin-left: 0;
-  	margin-right: 0;
-  	font-weight: bold;
+  	    display: block;
+  	    font-size: 1em;
+  	    margin-top: 0.67em;
+  	    margin-bottom: 0.67em;
+  	    margin-left: 0;
+  	    margin-right: 0;
+  	    font-weight: bold;
     }
     </style>
 </head>
@@ -40,6 +40,9 @@
 <h2>
     <a href="main.html" class="button">Main Page</a>
 </h2>
+<input type="button" id="toggle" value="Wake Lock disabled" />
+<br>
+<br>
 <pre class="output">
     alpha:
     beta:
@@ -51,6 +54,7 @@
 
 <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/p5@1.0.0/lib/p5.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/nosleep/0.6.0/NoSleep.min.js"></script>
 <script>
     var xs = [0];
     var ys = [0];
@@ -61,10 +65,28 @@
         noFill();
     }
 
-    //Motion event
+    //Motion event + no sleep
     window.addEventListener('devicemotion', function(event) {
+        //No sleep
+	    var noSleep = new NoSleep();
+        var wakeLockEnabled = false;
+        var toggleEl = document.querySelector("#toggle");
+        toggleEl.addEventListener('click', function() {
+            if (!wakeLockEnabled) {
+                noSleep.enable(); //Keep the screen on
+                wakeLockEnabled = true;
+                toggleEl.value = "Wake Lock enabled";
+                document.body.style.backgroundColor = "gray";
+            } else {
+                noSleep.disable(); //Let the screen turn off
+                wakeLockEnabled = false;
+                toggleEl.value = "Wake Lock disabled";
+                document.body.style.backgroundColor = "";
+            }
+        }, false);        
+        
+        //Motion
         var output = document.querySelector('.output');
-        //console.log(event.acceleration.x + ' m/s2');
         console.log(event.interval);
         var x = event.rotationRate.alpha;  // In degree in the range [-180,180]
         var y = event.rotationRate.beta;   // In degree in the range [-180,180]
