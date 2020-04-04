@@ -1,35 +1,57 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
+
+
 <head>
-<title>
-Login page
-</title>
+    <meta charset="UTF-8">
+    <title>Fourier</title>
+    <style>
+    body {
+        font-family: Arial;
+        font-size: 20px;
+    }
+
+    h1 { 
+  	     display: block;
+  	     font-size: 2em;
+  	     margin-top: 1.5em;
+  	     margin-bottom: 1em;
+  	     margin-left: 0;
+        margin-right: 0;
+  	     font-weight: bold;
+    }
+    </style>
 </head>
+
 <body>
-<h1 style="font-family:Comic Sans Ms;text-align="center";font-size:20pt;
-color:#00FF00;>
+<h1>
 Simple Login Page
 </h1>
+ 
 <form name="login">
-Username<input type="text" name="userid"/>
-Password<input type="password" name="pswrd"/>
+Username <input type="text" name="userid"/>
+Password <input type="password" name="pswd"/>
 <input type="button" onclick="check(this.form)" value="Login"/>
 <input type="reset" value="Cancel"/>
 </form>
-<script language="javascript">
-function check(form)/*function to check userid & password*/
+
+<script>
+function check(form)//Check userid and pswd
 {
- /*the following code checkes whether the entered userid and password are matching*/
- if(form.userid.value == "myuserid" && form.pswrd.value == "mypswrd")
+ if(form.userid.value == "admin" && form.pswd.value == "admin")
   {
-    window.open('target.html')/*opens the target page while Id & password matches*/
+    window.open('fourier.html', '_self")/*opens the target page while Id & password matches*/
   }
  else
  {
-   alert("Error Password or Username")/*displays error message*/
+   alert("Incorrect Username or Password")
   }
 }
 </script>
 </body>
+
+
+
 </html>
 
 
