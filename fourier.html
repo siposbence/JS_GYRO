@@ -49,7 +49,7 @@
     alpha:
     beta:
     gamma:
-    <!--fps:-->
+    res:
 </pre>
 
 
@@ -207,6 +207,7 @@
         output.innerHTML = "alpha : " + z + "\n";
         output.innerHTML += "beta : " + x + "\n";
         output.innerHTML += "gamma: " + y + "\n";
+	output.innerHTML += "res: " + 60*1/256*1000/t/skip + "\n";
         //output.innerHTML += "fps: " + 1000/fps + "\n";
 
     });
