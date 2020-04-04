@@ -76,7 +76,7 @@
         noFill();
     }
 
-    window.addEventListener('devicemotion', function(event) {
+    window.addEventListener('devicemotion', (event) => {
         var output = document.querySelector('.output');
         //console.log(event.acceleration.x + ' m/s2');
         console.log(event.interval);
@@ -236,13 +236,12 @@ function requestT () {
           DeviceMotionEvent.requestPermission()
           .then(response => {
 	  alert('Orientation tracking '+ response);
-          document.getElementById('request').style.visibility='hidden';
-
-            //if (response == 'granted') {
-            // window.addEventListener('devicemotion', (e) => {
-            //   document.getElementById('request').style.visibility='hidden';
-            //  })
-            //}
+		  
+            if (response == 'granted') {
+	    	document.getElementById('request').style.visibility='hidden';
+            	// window.addEventListener('devicemotion', (e) => {
+            	//  })
+            }
           })
           .catch(console.error)
       }else {
