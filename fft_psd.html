@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+</head>
+<body>
+<h1>
+    Fourier transzformált giroszkóp adat
+</h1>
+<a href="raw.html" class="button">Nyers adat</a>
+<pre class="output">
+    alpha:
+    beta:
+    gamma:
+    alpha_max:
+    beta_max:
+    gamma_max:
+    fps:
+</pre>
+
+
+<script src="https://cdn.jsdelivr.net/npm/p5@1.0.0/lib/p5.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.15.1/dist/tf.min.js"></script>
+<script>
+    var xs = [0];
+    var ys = [0];
+    var zs = [0];
+    var ii = 0;
+
+
+    window.addEventListener('devicemotion', function(event) {
+        var output = document.querySelector('.output');
+        var x = event.rotationRate.alpha;  // In degree in the range [-180,180]
+        var y = event.rotationRate.beta;
+        var z = event.rotationRate.gamma;
+        var t = event.interval;
+        xs.push(x);
+        ys.push(y);
+        zs.push(z);
+        if (xs.length > 512) {
+            var tmp = xs.shift();
+            tmp = ys.shift();
+            tmp = zs.shift();
+            output.innerHTML  = "alpha : " + z + "\n";
+            output.innerHTML  += "beta : " + x + "\n";
+            output.innerHTML += "gamma: " + y + "\n";
+            output.innerHTML  += "alpha_max: " + 60*pwr_spect(zs)/256*31.5 + "\n";
+            output.innerHTML  += "beta_max: " + 60*pwr_spect(xs)/256*31.5 + "\n";
+            output.innerHTML += "gamma_max: " + 60*pwr_spect(ys)/256*31.5 + "\n";
+            output.innerHTML += "Hz: " + 1000/t + "\n";
+        }
+
+        function pwr_spect(data) {
+            tf.setBackend('webgl');
+            const real = tf.tensor(data);
+            const imag = tf.zeros([data.length]);
+            const input = tf.complex(real, imag);
+            const res = tf.spectral.fft(input);
+            const Fs = 1/t;
+            const c = res.abs().square();
+            const d = tf.scalar(1/(data.length*Fs));
+            let pxx = c.mul(d);//.arraySync();
+            return(pxx.slice([0], [Math.floor(pxx.shape[0]/2)+1]).argMax().dataSync())
+            }
+        ii += 1;
+
+    });
+
+</script>
+</body>
+</html>
+
+
+
+
