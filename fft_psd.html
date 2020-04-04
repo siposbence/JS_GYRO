@@ -2,40 +2,13 @@
 <html lang="en">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-    
     <meta charset="UTF-8">
-    <title>FFT</title>
+    <title>Pulse and repiratory rate</title>
     <style>
-        
-        body {
-            font-family: Arial;
-            font-size: 20px;
-        }
-
-        h1 { 
-            display: block;
-  	        font-size: 2em;
-  	        margin-top: 1.5em;
-  	        margin-bottom: 1em;
-  	        margin-left: 0;
-  	        margin-right: 0;
-  	        font-weight: bold;
-        }
-    
-        h2 { 
-  	        display: block;
-  	        font-size: 1em;
-  	        margin-top: 0.67em;
-  	        margin-bottom: 0.67em;
-  	        margin-left: 0;
-  	        margin-right: 0;
-  	        font-weight: bold;
-        }
-        
         .slidecontainer {
             width: 100%;
         }
@@ -74,18 +47,18 @@
 </head>
 <body>
 <h1>
-    FFT
+    Fourier transzformált giroszkóp adat
 </h1>
-<h2>
-    <a href="main.html" class="button">Main Page</a>
-</h2>
+<a href="raw.html" class="button">Nyers adat</a>
 <br>
 <select id="ddlViewBy">
     <option value="1">x</option>
     <option value="2" selected="selected">y</option>
     <option value="3">z</option>
 </select>
+<input type="button" id="toggle" value="Wake Lock is disabled" />
 <pre class="output">
+
     alpha:
     beta:
     gamma:
@@ -93,48 +66,76 @@
     beta_max:
     gamma_max:
     fps:
+
 </pre>
 
 
 <script src="https://cdn.jsdelivr.net/npm/p5@1.0.0/lib/p5.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.15.1/dist/tf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/nosleep/0.6.0/NoSleep.min.js"></script>
 <script>
+
+
+
     var xs = [0];
     var ys = [0];
     var zs = [0];
     var ii = 0;
-    var size = 1024
+    const size = 128;
+    const skip = 12;
 
-    //Motion event
+
     window.addEventListener('devicemotion', function(event) {
+
+            var noSleep = new NoSleep();
+
+        var wakeLockEnabled = false;
+        var toggleEl = document.querySelector("#toggle");
+        toggleEl.addEventListener('click', function() {
+            if (!wakeLockEnabled) {
+                noSleep.enable(); // keep the screen on!
+                wakeLockEnabled = true;
+                toggleEl.value = "Wake Lock is enabled";
+                document.body.style.backgroundColor = "gray";
+            } else {
+                noSleep.disable(); // let the screen turn off.
+                wakeLockEnabled = false;
+                toggleEl.value = "Wake Lock is disabled";
+                document.body.style.backgroundColor = "";
+            }
+        }, false);
         var slider = document.getElementById("ddlViewBy");
         console.log(slider.value);
         var output = document.querySelector('.output');
         var x = event.rotationRate.alpha;  // In degree in the range [-180,180]
-        var y = event.rotationRate.beta;   // In degree in the range [-180,180]
-        var z = event.rotationRate.gamma;  // In degree in the range [-180,180]
+        var y = event.rotationRate.beta;
+        var z = event.rotationRate.gamma;
         var t = event.interval;
-        if (slider.value==1 && ii%3==0){xs.push(x);}
-        if (slider.value==2 && ii%3==0){ys.push(y);}
-        if (slider.value==3 && ii%3==0){zs.push(z);}
+        if (slider.value==1 && ii%skip==0){xs.push(x);}
+        if (slider.value==2 && ii%skip==0){ys.push(y);}
+        if (slider.value==3 && ii%skip==0){zs.push(z);}
         if ((slider.value==1 && xs.length > size)||(slider.value==2 && ys.length > size)||(slider.value==3 && zs.length > size)) {
             var tmp;
             output.innerHTML  = "alpha : " + z + "\n";
             output.innerHTML  += "beta : " + x + "\n";
             output.innerHTML += "gamma: " + y + "\n";
-            output.innerHTML += "Hz: " + 1000/t + "\n";
+            output.innerHTML += "Res: " + 60*1/256*1000/t/skip + "\n";
             if (slider.value==1){
                 tmp = xs.shift();
-                output.innerHTML  += "x max freq: " + 60*pwr_spect(xs)/256*1000/t/3 + "\n";
+                output.innerHTML  += "x max freq: " + 60*pwr_spect(xs)/256*1000/t/skip + "\n";
             }
             if (slider.value==2){
                 tmp = ys.shift();
-                output.innerHTML += "y max freq: " + 60*pwr_spect(ys)/256*1000/t/3 + "\n";
+                output.innerHTML += "y max freq: " + 60*pwr_spect(ys)/256*1000/t/skip + "\n";
             }
             if (slider.value==3){
                 tmp = zs.shift();
-                output.innerHTML  += "z max freq: " + 60*pwr_spect(zs)/256*1000/t/3  + "\n";
+                output.innerHTML  += "z max freq: " + 60*pwr_spect(zs)/256*1000/t/skip  + "\n";
             }
+
+
+
+
         }
 
         function pwr_spect(data) {
@@ -160,15 +161,15 @@
             tf.dispose(pxx);
             return(temp);
 
-        }
+            }
         ii += 1;
+
     });
 
 </script>
 </body>
-
-
-
 </html>
+
+
 
 
