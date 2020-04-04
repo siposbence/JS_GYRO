@@ -54,7 +54,6 @@
 
 <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/p5@1.0.0/lib/p5.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/nosleep/0.6.0/NoSleep.min.js"></script>
 <script>
     var xs = [0];
     var ys = [0];
@@ -67,23 +66,23 @@
 
     //Motion event + no sleep
     window.addEventListener('devicemotion', function(event) {
-        //No sleep
-	    var noSleep = new NoSleep();
-        var wakeLockEnabled = false;
-        var toggleEl = document.querySelector("#toggle");
-        toggleEl.addEventListener('click', function() {
-            if (!wakeLockEnabled) {
-                noSleep.enable(); //Keep the screen on
-                wakeLockEnabled = true;
-                toggleEl.value = "Wake Lock enabled";
-                document.body.style.backgroundColor = "gray";
-            } else {
-                noSleep.disable(); //Let the screen turn off
-                wakeLockEnabled = false;
-                toggleEl.value = "Wake Lock disabled";
-                document.body.style.backgroundColor = "";
-            }
-        }, false);        
+        ////No sleep
+	//var noSleep = new NoSleep();
+        //var wakeLockEnabled = false;
+        //var toggleEl = document.querySelector("#toggle");
+        //toggleEl.addEventListener('click', function() {
+        //    if (!wakeLockEnabled) {
+        //        noSleep.enable(); //Keep the screen on
+        //        wakeLockEnabled = true;
+        //        toggleEl.value = "Wake Lock enabled";
+        //        document.body.style.backgroundColor = "gray";
+        //    } else {
+        //        noSleep.disable(); //Let the screen turn off
+        //        wakeLockEnabled = false;
+        //        toggleEl.value = "Wake Lock disabled";
+        //        document.body.style.backgroundColor = "";
+        //    }
+        //}, false);        
         
         //Motion
         var output = document.querySelector('.output');
