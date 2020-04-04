@@ -94,9 +94,9 @@
     beta:
     gamma:
     res:
-    alpha_max:
-    beta_max:
-    gamma_max:
+    x max freq:
+    y max freq:
+    z max freq:
 </pre>
 
 
@@ -145,7 +145,7 @@
         if (slider.value==3 && ii%skip==0){zs.push(z);}
         if ((slider.value==1 && xs.length > size)||(slider.value==2 && ys.length > size)||(slider.value==3 && zs.length > size)) {
             var tmp;
-            output.innerHTML += "alpha : " + z + "\n";
+            output.innerHTML = "alpha : " + z + "\n";
             output.innerHTML += "beta : " + x + "\n";
             output.innerHTML += "gamma: " + y + "\n";
             output.innerHTML += "res: " + 60*1/256*1000/t/skip + "\n";
