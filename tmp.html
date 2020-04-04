@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <meta charset="UTF-8">
+    <title>Pulse and repiratory rate</title>
+    <style>
+        .slidecontainer {
+            width: 100%;
+        }
+
+        .slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 25px;
+            background: #d3d3d3;
+            outline: none;
+            opacity: 0.7;
+            -webkit-transition: .2s;
+            transition: opacity .2s;
+        }
+
+        .slider:hover {
+            opacity: 1;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 25px;
+            height: 25px;
+            background: #4CAF50;
+            cursor: pointer;
+        }
+
+        .slider::-moz-range-thumb {
+            width: 25px;
+            height: 25px;
+            background: #4CAF50;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<h1>
+    Fourier transzformált giroszkóp adat
+</h1>
+<a href="raw.html" class="button">Nyers adat</a>
+<br>
+<select id="ddlViewBy">
+    <option value="1">x</option>
+    <option value="2" selected="selected">y</option>
+    <option value="3">z</option>
+</select>
+<input type="button" id="toggle" value="Wake Lock is disabled" />
+<pre class="output">
+EGy pillanat!!!!4 4
+</pre>
+
+
+<script src="https://cdn.jsdelivr.net/npm/p5@1.0.0/lib/p5.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.15.1/dist/tf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/nosleep/0.6.0/NoSleep.min.js"></script>
+<script>
+
+
+
+    var xs = [0];
+    var ys = [0];
+    var zs = [0];
+    var ii = 0;
+    const size = 256;
+    const skip = 10;
+
+
+    window.addEventListener('devicemotion', function(event) {
+
+            var noSleep = new NoSleep();
+
+        var wakeLockEnabled = false;
+        var toggleEl = document.querySelector("#toggle");
+        toggleEl.addEventListener('click', function() {
+            if (!wakeLockEnabled) {
+                noSleep.enable(); // keep the screen on!
+                wakeLockEnabled = true;
+                toggleEl.value = "Wake Lock is enabled";
+                document.body.style.backgroundColor = "gray";
+            } else {
+                noSleep.disable(); // let the screen turn off.
+                wakeLockEnabled = false;
+                toggleEl.value = "Wake Lock is disabled";
+                document.body.style.backgroundColor = "";
+            }
+        }, false);
+        var slider = document.getElementById("ddlViewBy");
+        console.log(slider.value);
+        var output = document.querySelector('.output');
+        var x = event.rotationRate.alpha;  // In degree in the range [-180,180]
+        var y = event.rotationRate.beta;
+        var z = event.rotationRate.gamma;
+        var t = event.interval;
+        if (slider.value==1 && ii%skip==0){xs.push(x);}
+        if (slider.value==2 && ii%skip==0){ys.push(y);}
+        if (slider.value==3 && ii%skip==0){zs.push(z);}
+        if ((slider.value==1 && xs.length > size)||(slider.value==2 && ys.length > size)||(slider.value==3 && zs.length > size)) {
+            var tmp;
+            output.innerHTML  = "alpha : " + z + "\n";
+            output.innerHTML  += "beta : " + x + "\n";
+            output.innerHTML += "gamma: " + y + "\n";
+            output.innerHTML += "Res: " + 60*1/size*1000/t/skip + "\n";
+            if (slider.value==1){
+                tmp = xs.shift();
+                output.innerHTML  += "x max freq: " + pwr_spect(xs, 1000/t/skip)[1] + "\n";
+            }
+            if (slider.value==2){
+                tmp = ys.shift();
+                output.innerHTML += "y max freq: " + pwr_spect(ys, 1000/t/skip)[1] + "\n";
+            }
+            if (slider.value==3){
+                tmp = zs.shift();
+                output.innerHTML  += "z max freq: " + pwr_spect(zs, 1000/t/skip)[1]  + "\n";
+            }
+        }
+
+        function pwr_spect(data, sf, hr_low = 40, hr_high = 120, rr_low = 10, rr_high = 40) {
+            //tf.setBackend('webgl');
+            const real = tf.tensor(data);
+            const imag = tf.zeros([data.length]);
+            const input = tf.complex(real, imag);
+            tf.dispose(real);
+            tf.dispose(imag);
+            //imag.dispose;
+            const res = tf.spectral.fft(input);
+            const Fs = 1/t;
+            const c = res.abs().square();
+            const d = tf.scalar(1/(data.length*Fs));
+            let pxx = c.mul(d);
+            tf.dispose(input);
+            tf.dispose(res);
+            tf.dispose(Fs);
+            tf.dispose(c);
+            tf.dispose(d);
+            //.arraySync();
+            const hr_min = Math.floor(hr_low/60*data.length/sf);
+            const rr_min = Math.floor(rr_low/60*data.length/sf);
+            const hr_max = Math.ceil(hr_high/60*data.length/sf);
+            const rr_max = Math.ceil(rr_high/60*data.length/sf);
+            console.log([hr_min, hr_max, rr_min, rr_max]);
+            //60*pwr_spect(zs)/256*1000/t/skip
+            var hr = 60/data.length*sf*pxx.slice([hr_min], [hr_max]).argMax().dataSync();
+            var rr = 60/data.length*sf*pxx.slice([rr_min], [rr_max]).argMax().dataSync();
+            tf.dispose(pxx);
+            return([hr, rr]);
+
+            }
+        ii += 1;
+
+    });
+
+</script>
+</body>
+</html>
+
+
+
+
