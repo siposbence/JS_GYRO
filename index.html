@@ -47,7 +47,8 @@
     </style>
 </head>
 
-<body onload="check()">
+<!--<body onload="check()">-->
+<body>
 <h1>
     Fourier transzformált giroszkóp adat
 </h1>
@@ -61,7 +62,7 @@
     fps:
 </pre>
 
-<button id="request" title="Tap Here">Tap Here to enable orientation tracking</button>
+<!--<button id="request" title="Tap Here">Tap Here to enable orientation tracking</button>-->
 
 <script src="https://cdn.jsdelivr.net/npm/p5@1.0.0/lib/p5.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.15.1/dist/tf.min.js"></script>
@@ -70,13 +71,48 @@
     var ys = [0];
     var zs = [0];
     var ii = 0;
-
+    let permissionGranted = false
+    let nonios13device = false
+    
     function setup() {
         createCanvas(512, 256);
         noFill();
+	
+	//Request sensor access on iOS 13 devices
+	if (typeof(DeviceOrientationEvent) !== 'undefined' && typeof(DeviceOrientationEvent.requestPermission) === 'function') {
+		DeviceOrientationEvent.requestPermission()
+                .catch(() => {
+                //Show permission dialog only the first time
+        	let askButton = createButton("Allow acess to sensors")
+        	askButton.style("font-size", "24px")
+        	askButton.position(0, 0)
+        	askButton.mousePressed(onAskButtonClicked)
+        	throw error
+      	})
+      	.then(() => {
+	//This runs on subsequent visits
+        permissionGranted = true
+      	})
+  	} else {
+    	text("non ios 13 devices", 50, 50)
+    	nonios13device = true
+    	permissionGranted = true
+  	}
     }
 
-    window.addEventListener('devicemotion', (event) => {
+    //Handle first time visiting to grant access
+    function onAskButtonClicked() {
+    DeviceOrientationEvent.requestPermission().then(response => {
+    if (response === 'granted') {
+      permissionGranted = true
+    } else {
+      permissionGranted = false
+    }
+    this.remove()
+    }).catch(console.error)
+    }
+	
+    window.addEventListener('devicemotion', function(event) {
         var output = document.querySelector('.output');
         //console.log(event.acceleration.x + ' m/s2');
         console.log(event.interval);
@@ -198,8 +234,10 @@
 </body>
 
 
-
+<!--
 <script>
+//Check if device is iOS 13
+//Button is visible for every device though
 function check() {
     var match = (navigator.appVersion).match(/OS (\d+)_(\d+)_?(\d+)?/),
         version;
@@ -219,7 +257,7 @@ function check() {
 
     }
     else {
-	document.getElementById('request').style.visibility = 'hidden';
+	document.getElementById('request').style.visibility = 'visible';
 	}
 }
 </script>
@@ -227,10 +265,12 @@ function check() {
 
 
 <script>
+//Make it https
   if (location.protocol != 'https:') {
    location.href = 'https:' + window.location.href.substring(window.location.protocol.length);
   }
- 
+
+//Request permission
 function requestT () {
       if (typeof(DeviceMotionEvent) !== 'undefined' && typeof(DeviceMotionEvent.requestPermission) === 'function') {
           DeviceMotionEvent.requestPermission()
@@ -251,7 +291,7 @@ function requestT () {
   }
   document.getElementById('request').onclick = requestT;
   </script>
-
+-->
 
 
 </html>
