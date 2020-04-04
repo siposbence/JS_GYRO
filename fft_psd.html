@@ -80,12 +80,13 @@
     <a href="main.html" class="button">Main Page</a>
 </h2>
 <br>
+<input type="button" id="toggle" value="Wake Lock disabled" />
+<br>
 <select id="ddlViewBy">
     <option value="1">x</option>
     <option value="2" selected="selected">y</option>
     <option value="3">z</option>
 </select>
-<input type="button" id="toggle" value="Wake Lock disabled" />
 <pre class="output">
     alpha:
     beta:
@@ -118,12 +119,12 @@
             if (!wakeLockEnabled) {
                 noSleep.enable(); //Keep the screen on
                 wakeLockEnabled = true;
-                toggleEl.value = "Wake Lock is enabled";
+                toggleEl.value = "Wake Lock enabled";
                 document.body.style.backgroundColor = "gray";
             } else {
                 noSleep.disable(); //Let the screen turn off
                 wakeLockEnabled = false;
-                toggleEl.value = "Wake Lock is disabled";
+                toggleEl.value = "Wake Lock disabled";
                 document.body.style.backgroundColor = "";
             }
         }, false);
