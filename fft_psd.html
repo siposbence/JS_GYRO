@@ -1,16 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Pulse and repiratory rate</title>
+    <style>
+        .slidecontainer {
+            width: 100%;
+        }
 
+        .slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 25px;
+            background: #d3d3d3;
+            outline: none;
+            opacity: 0.7;
+            -webkit-transition: .2s;
+            transition: opacity .2s;
+        }
+
+        .slider:hover {
+            opacity: 1;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 25px;
+            height: 25px;
+            background: #4CAF50;
+            cursor: pointer;
+        }
+
+        .slider::-moz-range-thumb {
+            width: 25px;
+            height: 25px;
+            background: #4CAF50;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
 <h1>
     Fourier transzformált giroszkóp adat
 </h1>
 <a href="raw.html" class="button">Nyers adat</a>
+<br>
+<select id="ddlViewBy">
+    <option value="1">x</option>
+    <option value="2" selected="selected">y</option>
+    <option value="3">z</option>
+</select>
 <pre class="output">
+
     alpha:
     beta:
     gamma:
@@ -18,51 +65,81 @@
     beta_max:
     gamma_max:
     fps:
+
 </pre>
 
 
 <script src="https://cdn.jsdelivr.net/npm/p5@1.0.0/lib/p5.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.15.1/dist/tf.min.js"></script>
 <script>
+
+
+
     var xs = [0];
     var ys = [0];
     var zs = [0];
     var ii = 0;
+    var size = 1024
 
 
     window.addEventListener('devicemotion', function(event) {
+        var slider = document.getElementById("ddlViewBy");
+        console.log(slider.value);
         var output = document.querySelector('.output');
         var x = event.rotationRate.alpha;  // In degree in the range [-180,180]
         var y = event.rotationRate.beta;
         var z = event.rotationRate.gamma;
         var t = event.interval;
-        xs.push(x);
-        ys.push(y);
-        zs.push(z);
-        if (xs.length > 512) {
-            var tmp = xs.shift();
-            tmp = ys.shift();
-            tmp = zs.shift();
+        if (slider.value==1 && ii%3==0){xs.push(x);}
+        if (slider.value==2 && ii%3==0){ys.push(y);}
+        if (slider.value==3 && ii%3==0){zs.push(z);}
+        if ((slider.value==1 && xs.length > size)||(slider.value==2 && ys.length > size)||(slider.value==3 && zs.length > size)) {
+            var tmp;
             output.innerHTML  = "alpha : " + z + "\n";
             output.innerHTML  += "beta : " + x + "\n";
             output.innerHTML += "gamma: " + y + "\n";
-            output.innerHTML  += "alpha_max: " + 60*pwr_spect(zs)/256*31.5 + "\n";
-            output.innerHTML  += "beta_max: " + 60*pwr_spect(xs)/256*31.5 + "\n";
-            output.innerHTML += "gamma_max: " + 60*pwr_spect(ys)/256*31.5 + "\n";
             output.innerHTML += "Hz: " + 1000/t + "\n";
+            if (slider.value==1){
+                tmp = xs.shift();
+                output.innerHTML  += "x max freq: " + 60*pwr_spect(xs)/256*1000/t/3 + "\n";
+            }
+            if (slider.value==2){
+                tmp = ys.shift();
+                output.innerHTML += "y max freq: " + 60*pwr_spect(ys)/256*1000/t/3 + "\n";
+            }
+            if (slider.value==3){
+                tmp = zs.shift();
+                output.innerHTML  += "z max freq: " + 60*pwr_spect(zs)/256*1000/t/3  + "\n";
+            }
+
+
+
+
         }
 
         function pwr_spect(data) {
-            tf.setBackend('webgl');
+            //tf.setBackend('webgl');
             const real = tf.tensor(data);
             const imag = tf.zeros([data.length]);
             const input = tf.complex(real, imag);
+            tf.dispose(real);
+            tf.dispose(imag);
+            //imag.dispose;
             const res = tf.spectral.fft(input);
             const Fs = 1/t;
             const c = res.abs().square();
             const d = tf.scalar(1/(data.length*Fs));
-            let pxx = c.mul(d);//.arraySync();
-            return(pxx.slice([0], [Math.floor(pxx.shape[0]/2)+1]).argMax().dataSync())
+            let pxx = c.mul(d);
+            tf.dispose(input);
+            tf.dispose(res);
+            tf.dispose(Fs);
+            tf.dispose(c);
+            tf.dispose(d);
+            //.arraySync();
+            var temp = pxx.slice([0], [Math.floor(pxx.shape[0]/2)+1]).argMax().dataSync();
+            tf.dispose(pxx);
+            return(temp);
+
             }
         ii += 1;
 
