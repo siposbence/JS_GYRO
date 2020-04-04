@@ -1,20 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Fourier</title>
+    <style>
+    body {
+        font-family: Arial;
+        font-size: 20px;
+    }
 
+    h1 { 
+  	display: block;
+  	font-size: 2em;
+  	margin-top: 1.5em;
+  	margin-bottom: 1em;
+  	margin-left: 0;
+  	margin-right: 0;
+  	font-weight: bold;
+    }
+    
+    h2 { 
+  	display: block;
+  	font-size: 1em;
+  	margin-top: 0.67em;
+  	margin-bottom: 0.67em;
+  	margin-left: 0;
+  	margin-right: 0;
+  	font-weight: bold;
+    }
+    </style>
 </head>
+
 <body>
 <h1>
-    Nyers giroszkóp adat
+    Raw
 </h1>
+<h2>
+    <a href="index.html" class="button">Fourier</a>
+</h2>
 <pre class="output">
     alpha:
     beta:
     gamma:
     fps:
 </pre>
+
+
 
 <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/p5@1.0.0/lib/p5.js"></script>
@@ -28,13 +60,14 @@
         noFill();
     }
 
+    //Motion event
     window.addEventListener('devicemotion', function(event) {
         var output = document.querySelector('.output');
         //console.log(event.acceleration.x + ' m/s2');
         console.log(event.interval);
         var x = event.rotationRate.alpha;  // In degree in the range [-180,180]
-        var y = event.rotationRate.beta;
-        var z = event.rotationRate.gamma;
+        var y = event.rotationRate.beta;   // In degree in the range [-180,180]
+        var z = event.rotationRate.gamma;  // In degree in the range [-180,180]
         var fps = event.interval;
         xs.push(x);
         ys.push(y);
@@ -68,7 +101,7 @@
                 //console.log((data[i])*128/Math.max(...data)+128)
                 line(px, py, x, y);
 
-                //store the last position
+                //Last position
                 px = x;
                 py = y;
         }}
@@ -91,20 +124,11 @@
         output.innerHTML += "fps: " + 1000/fps + "\n";
 
     });
-
-
-
-
-
-
-
-
-
-
 </script>
 </body>
+
+
+
 </html>
-
-
 
 
