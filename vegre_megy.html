@@ -51,7 +51,7 @@
     <option value="2" selected="selected">y</option>
     <option value="3">z</option>
 </select>
-<input type="button" id="toggle" value="Wake Lock is disabled" />
+
 <pre class="output">
 Wait 30s!
 </pre>
@@ -120,23 +120,6 @@ Wait 30s!
     }
     window.addEventListener('devicemotion', function(event) {
 
-        var noSleep = new NoSleep();
-
-        var wakeLockEnabled = false;
-        var toggleEl = document.querySelector("#toggle");
-        toggleEl.addEventListener('click', function() {
-            if (!wakeLockEnabled) {
-                noSleep.enable(); // keep the screen on!
-                wakeLockEnabled = true;
-                toggleEl.value = "Wake Lock is enabled";
-                document.body.style.backgroundColor = "gray";
-            } else {
-                noSleep.disable(); // let the screen turn off.
-                wakeLockEnabled = false;
-                toggleEl.value = "Wake Lock is disabled";
-                document.body.style.backgroundColor = "";
-            }
-        }, false);
 
         let slider_value = slider.value ;
 
