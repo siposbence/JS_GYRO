@@ -2,10 +2,6 @@
 <html lang="en">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
     <meta charset="UTF-8">
     <title>Pulse and repiratory rate</title>
     <style>
@@ -47,9 +43,8 @@
 </head>
 <body>
 <h1>
-    Fourier transzformált giroszkóp adat
+    Respiratory rate and heart rate
 </h1>
-<a href="raw.html" class="button">Nyers adat</a>
 <br>
 <select id="ddlViewBy">
     <option value="1">x</option>
@@ -58,7 +53,7 @@
 </select>
 <input type="button" id="toggle" value="Wake Lock is disabled" />
 <pre class="output">
-EGy pillanat!!!!4 4
+Wait 30s!
 </pre>
 
 
@@ -120,12 +115,11 @@ EGy pillanat!!!!4 4
         //console.log(tf.memory());
         output.innerHTML  += "hearth rate: " + 60/data.length*sf*hr + "\n";
         output.innerHTML  += "respiratory: " + 60/data.length*sf*rr + "\n";
-        //output.querySelectorAll('*').forEach(n => n.remove());
+        output.querySelectorAll('*').forEach(n => n.remove());
     return undefined;
     }
-
     window.addEventListener('devicemotion', function(event) {
-/*
+
         var noSleep = new NoSleep();
 
         var wakeLockEnabled = false;
@@ -142,7 +136,7 @@ EGy pillanat!!!!4 4
                 toggleEl.value = "Wake Lock is disabled";
                 document.body.style.backgroundColor = "";
             }
-        }, false);*/
+        }, false);
 
         let slider_value = slider.value ;
 
@@ -153,44 +147,39 @@ EGy pillanat!!!!4 4
         let z = event.rotationRate.gamma;
         t = event.interval;
 
-
-
         //console.log(xs)
         if (slider_value==1 && ii%skip==0){xs.push(x);}
         if (slider_value==2 && ii%skip==0){ys.push(y);}
         if (slider_value==3 && ii%skip==0){zs.push(z);}
-        if ((slider_value==1 && xs.length > size && ii%(4*skip) == 0)||(slider_value==2 && ys.length > size && ii%(4*skip)== 0)||(slider_value==3 && zs.length > size && ii%(4*skip) == 0)) {
+        if ((slider_value==1 && xs.length > size && ii%(10*skip) == 0)||(slider_value==2 && ys.length > size && ii%(10*skip)== 0)||(slider_value==3 && zs.length > size && ii%(10*skip) == 0)) {
 
-            //output.innerHTML  = "alpha : " + z + "\n";
+            output.innerHTML  = "alpha : " + z + "\n";
             //output.innerHTML  += "beta : " + x + "\n";
             //output.innerHTML += "gamma: " + y + "\n";
-            output.innerHTML = "Res: " + 60*1/size*1000/t/skip + "\n";
+            output.innerHTML += "Res: " + 60*1/size*1000/t/skip + "\n";
             if (slider_value==1){
-                //tmp = xs.shift();
-                xs.length = 128;
-                console.log(tf.memory());
-                //tf.disposeVariables();
-                //output.querySelectorAll('*').forEach(n => n.remove());
+                xs = xs.slice(Math.max(xs.length - 128, 0));
+                console.log(xs.length);
+                data = xs;
+                sf = 1000/t/skip;
+                const tidytmp = tf.tidy(pwr_spect);
 
             }
             if (slider_value==2){
-                //tmp = ys.shift();
-                ys.length = 128;
+                ys = ys.slice(Math.max(ys.length - 128, 0));
+                console.log(ys.length);
                 data = ys;
                 sf = 1000/t/skip;
                 const tidytmp = tf.tidy(pwr_spect);
-                console.log(tf.memory());
+                //console.log(tf.memory());
 
             }
             if (slider_value==3){
-                //tmp = zs.shift();
-                zs.length = 128;
-                console.log(zs.length)
-                //tmp = zs.shift();
+                zs = zs.slice(Math.max(zs.length - 128, 0));
+                console.log(zs.length);
                 data = zs;
                 sf = 1000/t/skip;
-                pwr_spect();
-                //console.log(tf.memory());
+                const tidytmp = tf.tidy(pwr_spect);
                 
 
             }
