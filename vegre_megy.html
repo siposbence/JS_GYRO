@@ -136,10 +136,10 @@ Wait 30s!
         if (slider_value==3 && ii%skip==0){zs.push(z);}
         if ((slider_value==1 && xs.length > size && ii%(10*skip) == 0)||(slider_value==2 && ys.length > size && ii%(10*skip)== 0)||(slider_value==3 && zs.length > size && ii%(10*skip) == 0)) {
 
-            output.innerHTML  = "alpha : " + z + "\n";
+            //output.innerHTML  = "alpha : " + z + "\n";
             //output.innerHTML  += "beta : " + x + "\n";
             //output.innerHTML += "gamma: " + y + "\n";
-            output.innerHTML += "Res: " + 60*1/size*1000/t/skip + "\n";
+            output.innerHTML = "Res: " + 60*1/size*1000/t/skip + "\n";
             if (slider_value==1){
                 xs = xs.slice(Math.max(xs.length - 128, 0));
                 console.log(xs.length);
