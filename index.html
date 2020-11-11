@@ -115,7 +115,7 @@ Wait 30s!
         //console.log(tf.memory());
         //output.innerHTML  += "hearth rate: " + 60/data.length*sf*hr + "\n";
         // --------------------------------------------------------------------------
-        output.innerHTML  = "respiratory: " + Math.round(60/data.length*sf*rr) + "\n";
+        output.innerHTML  =  Math.round(60/data.length*sf*rr) ;
         // --------------------------------------------------------------------------
         output.querySelectorAll('*').forEach(n => n.remove());
     return undefined;
