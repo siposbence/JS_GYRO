@@ -51,7 +51,7 @@
     <option value="2" selected="selected">y</option>
     <option value="3">z</option>
 </select>
-<p style=\"font-size:30px\">
+<p style=\"font-size:120px\">
 <pre class="output">
 Wait 30s!
 </pre>
@@ -114,7 +114,9 @@ Wait 30s!
         tf.dispose(input);tf.dispose(imag);tf.dispose(real);
         //console.log(tf.memory());
         //output.innerHTML  += "hearth rate: " + 60/data.length*sf*hr + "\n";
-        output.innerHTML  += "respiratory: " + 60/data.length*sf*rr + "\n";
+        // --------------------------------------------------------------------------
+        output.innerHTML  = "respiratory: " + Math.round(60/data.length*sf*rr) + "\n";
+        // --------------------------------------------------------------------------
         output.querySelectorAll('*').forEach(n => n.remove());
     return undefined;
     }
