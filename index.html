@@ -43,7 +43,7 @@
 </head>
 <body>
 <h1>
-    Respiratory rate and heart rate
+    Respiratory rate
 </h1>
 <br>
 <select id="ddlViewBy">
@@ -51,11 +51,11 @@
     <option value="2" selected="selected">y</option>
     <option value="3">z</option>
 </select>
-
+<p style=\"font-size:30px\">
 <pre class="output">
 Wait 30s!
 </pre>
-
+</p>
 
 
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.15.1/dist/tf.min.js"></script>
@@ -114,7 +114,7 @@ Wait 30s!
         tf.dispose(input);tf.dispose(imag);tf.dispose(real);
         //console.log(tf.memory());
         //output.innerHTML  += "hearth rate: " + 60/data.length*sf*hr + "\n";
-        output.innerHTML  += "<p style=\"font-size:30px\"> respiratory: " + 60/data.length*sf*rr + "\n<\\p>";
+        output.innerHTML  += "respiratory: " + 60/data.length*sf*rr + "\n";
         output.querySelectorAll('*').forEach(n => n.remove());
     return undefined;
     }
