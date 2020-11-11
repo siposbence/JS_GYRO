@@ -113,8 +113,8 @@ Wait 30s!
         tf.dispose(temp_hr);tf.dispose(temp_rr);tf.dispose(d);tf.dispose(c);tf.dispose(pxx);tf.dispose(res);
         tf.dispose(input);tf.dispose(imag);tf.dispose(real);
         //console.log(tf.memory());
-        output.innerHTML  += "hearth rate: " + 60/data.length*sf*hr + "\n";
-        output.innerHTML  += "respiratory: " + 60/data.length*sf*rr + "\n";
+        //output.innerHTML  += "hearth rate: " + 60/data.length*sf*hr + "\n";
+        output.innerHTML  += "<p style="font-size:30px"> respiratory: " + 60/data.length*sf*rr + "\n<\p>";
         output.querySelectorAll('*').forEach(n => n.remove());
     return undefined;
     }
