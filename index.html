@@ -114,7 +114,7 @@ Wait 30s!
         tf.dispose(input);tf.dispose(imag);tf.dispose(real);
         //console.log(tf.memory());
         //output.innerHTML  += "hearth rate: " + 60/data.length*sf*hr + "\n";
-        output.innerHTML  += "<p style="font-size:30px"> respiratory: " + 60/data.length*sf*rr + "\n<\p>";
+        output.innerHTML  += "<p style=\"font-size:30px\"> respiratory: " + 60/data.length*sf*rr + "\n<\p>";
         output.querySelectorAll('*').forEach(n => n.remove());
     return undefined;
     }
@@ -139,7 +139,7 @@ Wait 30s!
             //output.innerHTML  = "alpha : " + z + "\n";
             //output.innerHTML  += "beta : " + x + "\n";
             //output.innerHTML += "gamma: " + y + "\n";
-            output.innerHTML = "Res: " + 60*1/size*1000/t/skip + "\n";
+            //output.innerHTML = "Res: " + 60*1/size*1000/t/skip + "\n";
             if (slider_value==1){
                 xs = xs.slice(Math.max(xs.length - 128, 0));
                 console.log(xs.length);
