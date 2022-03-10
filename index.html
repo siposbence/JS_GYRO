@@ -20,7 +20,7 @@ function httpGet(theUrl)
 
 function myFunction() {
   var x = document.getElementById("frm1").elements[0].value;  
-  theUrl = "http://chatbot.eper.tv/api/chatbot/70565E2B5A384043BF55A9C90C74D63C/getanswers?message=" +x+"&answerstyleid=1&Language=hu&contextid="
+  theUrl = "https://chatbot.eper.tv/api/chatbot/70565E2B5A384043BF55A9C90C74D63C/getanswers?message=" +x+"&answerstyleid=1&Language=hu&contextid="
   text = httpGet(theUrl);
   document.getElementById("demo").innerHTML = text;
 }
